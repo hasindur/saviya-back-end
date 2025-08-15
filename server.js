@@ -24,9 +24,6 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", UserSchema);
 
-// =============================
-// 🔹 CRUD API Routes
-// =============================
 
 // 1️⃣ CREATE user
 app.post("/users", async (req, res) => {
