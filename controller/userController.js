@@ -1,5 +1,6 @@
 import User from '../models/user.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export function saveUser(req, res) {
 
@@ -15,15 +16,15 @@ export function saveUser(req, res) {
    user.save()
         .then((data) => {
             res.status(201).json({
-                message: "User created successfully",
+                message: "User saved successfully",
                
             });
         })
         .catch((error) => {
-            console.error("Error saving user:", error);
+            console.error("Error saving user :", error);
             res.status(500).json({
-                message: "Error saving user",
-                error: error.message
+                message: "user not saved successfully",
+                
             });
         });
    
@@ -42,14 +43,27 @@ export function loginUser(req, res) {
             }
 
             const isPasswordValid = bcrypt.compareSync(password, user.password);
-            if (!isPasswordValid) {
-                return res.status(401).json({ message: "Invalid password" });
+            if (isPasswordValid) {
+
+                // Create a token payload with user data
+                // You can include any user information you want in the token
+                  const userData = {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    role: user.role,
+                    isDisabled: user.isDisabled,
+                    isEmailVerified: user.isEmailVerified,    
+                     
+                  };
+                  // Sign the token with a secret key and set an expiration time
+                const token = jwt.sign(userData, "random456");
+                return res.status(200).json({ message: "Login successful", token });
+            }else {
+                 return res.status(401).json({ message: "Invalid password" });
             }
 
-            res.status(200).json({
-                message: "Login successful",
-                
-            });
+           
         })
         .catch((error) => {
             console.error("Error during login:", error);
