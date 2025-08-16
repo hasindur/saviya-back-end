@@ -3,6 +3,12 @@ import Home from '../models/home.js';
 
 // ✅ Create a new Home
 export const createHome = async (req, res) => {
+    // if(req.user == null) {
+    //     return res.status(401).json({ message: "You need to login first" });
+    // }
+    // if (req.user.role !== 'admin') {
+    //     return res.status(403).json({ message: "You are not authorized" });   
+    // }
     try {
         console.log("POST /api/home called with body:", req.body);
 
