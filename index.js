@@ -19,59 +19,12 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("✅ MongoDB  Database connected"))
 .catch(err => console.log("❌ DB Error:", err));
 
-// ✅ Schema & Model
-const UserSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  age: Number
-});
-const User = mongoose.model("User", UserSchema);
+// ✅ Middleware
+app.use(bodyParser.json()); 
 
 
-// 1️⃣ CREATE user
-app.post("/users", async (req, res) => {
-  try {
-    const user = new User(req.body);
-    await user.save();
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// 2️⃣ READ all users
-app.get("/users", async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// 3️⃣ UPDATE user by ID
-app.put("/users/:id", async (req, res) => {
-  try {
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    res.json(updatedUser);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// 4️⃣ DELETE user by ID
-app.delete("/users/:id", async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.params.id);
-    res.json({ message: "User deleted" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// ✅ Routes
+app.use("/api/user", userRouter);
 
 // =============================
 const PORT = process.env.PORT || 5000;
