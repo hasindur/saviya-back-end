@@ -4,11 +4,12 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import userRouter from "./routes/userRouter.js";
+import homeRouter from "./routes/homeRouter.js";
+//import verifyJWT from "./middleware/auth.js";
 
 dotenv.config();
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(cors());app.use(express.json());
 
 
 // ✅ MongoDB connection
@@ -21,10 +22,13 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // ✅ Middleware
 app.use(bodyParser.json()); 
+//app.use(verifyJWT);
+
 
 
 // ✅ Routes
 app.use("/api/user", userRouter);
+app.use("/api/home", homeRouter);   
 
 // =============================
 const PORT = process.env.PORT || 5000;

@@ -11,6 +11,8 @@ export function saveUser(req, res) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: hashedPassword,
+        role: req.body.role,
+
       
     });
    user.save()
@@ -56,9 +58,12 @@ export function loginUser(req, res) {
                     isEmailVerified: user.isEmailVerified,    
                      
                   };
+                  console.log("User data for token:", userData);
                   // Sign the token with a secret key and set an expiration time
                 const token = jwt.sign(userData, "random456");
-                return res.status(200).json({ message: "Login successful", token });
+                return res.status(200).json({ 
+                    message: "Login successful", 
+                    token: token });
             }else {
                  return res.status(401).json({ message: "Invalid password" });
             }
